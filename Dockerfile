@@ -42,6 +42,9 @@ COPY . .
 RUN poetry build
 RUN /venv/bin/pip install dist/*.whl
 
+### satisfy README
+RUN /venv/bin/pip install psycopg2-binary uvicorn
+
 ### Final image
 FROM base as final
 
@@ -54,8 +57,8 @@ ENV VIRTUAL_ENV=/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN chmod u+x lib/docker/entrypoint.sh
-ENTRYPOINT ["lib/docker/entrypoint.sh"]
+RUN chmod u+x bin/docker/entrypoint.sh
+ENTRYPOINT ["bin/docker/entrypoint.sh"]
 
-RUN chmod u+x ./lib/docker/start.sh
-CMD ["lib/docker/start.sh"]
+RUN chmod u+x ./bin/docker/start.sh
+CMD ["bin/docker/start.sh"]

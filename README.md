@@ -85,3 +85,7 @@ pre-commit install -t commit
 ## psycopg2 Linux (Debian/Ubuntu)
 If `poetry install` fails on psycopg2 try:
 `pip install psycopg2-binary`
+
+If app complains about missing module uvicorn
+`pip install uvicorn`
+
