@@ -32,5 +32,5 @@ if [ "${RUN_DEV}" = "1" ]
 fi
 
 echo ">>> Run gunicorn"
-#gunicorn -c gunicorn_config.py backend.wsgi
-gunicorn backend.asgi:application -k uvicorn.workers.UvicornWorker
+gunicorn -c gunicorn_config.py backend.wsgi
+#gunicorn backend.asgi:application -k uvicorn.workers.UvicornWorker
