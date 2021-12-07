@@ -1,11 +1,16 @@
-# Backend
+# Django Backend
 
 ## Overview
 
+This is a sandbox project to quickstart any django project
+as quickly as possible. The setup includes the common django packages
+with django rest framework, the postgresql database and
+the nginx server easy to deploy as docker images.
+
 ## Prerequisites
-* [Docker](https://docs.docker.com/install/#server)
+* [Debian](https://debian.org)
+* [Docker](https://docs.docker.com/engine/install/debian/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
-* Basic knowledge of Django and Python.
 
 ## Quick Start
 
@@ -82,10 +87,11 @@ pre-commit install -t commit
 ```
 
 
-## psycopg2 Linux (Debian/Ubuntu)
+### psycopg2 Linux (Debian/Ubuntu)
 If `poetry install` fails on psycopg2 try:
 `pip install psycopg2-binary`
 
+### install ASGI worker (if required)
 If app complains about missing module uvicorn
 `pip install uvicorn`
 
