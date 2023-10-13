@@ -17,18 +17,18 @@ the nginx server easy to deploy as docker images.
 1. Install the prerequisites if you haven't already.
 2. After cloning this repository, navigate to the root folder and run the following command to start with backend:
     * make sure your SSH key is NOT protected with a password
-    * copy the file `.env.example` to a file named `.env`, fill in any secrets needed from Berglas
-    * build backend image with ssh key: `docker-compose build --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)"`
+    * copy the file `.env.example` to a file named `.env`, fill in any secrets needed
+    * build backend image with ssh key: `docker compose build --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)"`
    On first run, Docker builds the required images and installs the dependencies listed in [`pyproject.toml`](./pyproject.toml)
     and locked in [`poetry.lock`](./poetry.lock).
     * Run `docker network create global_network`
 3. It might be necessary to apply database migrations BEFORE starting the container for the first time:
 
     ```
-    docker-compose run backend python manage.py migrate
+    docker compose run backend python manage.py migrate
     ```
 
-4. Run `$ docker-compose up -d` to start the backend app (`$ docker-compose down` stops it again)
+4. Run `$ docker compose up -d` to start the backend app (`$ docker compose down` stops it again)
 5. After the app has booted, connect to backend container:
 
     ```
@@ -59,11 +59,11 @@ the nginx server easy to deploy as docker images.
      ```
 
 #### Local Environment
-After running all docker services using docker-compose, set `DJANGO_READ_DOT_ENV_FILE` to true.
+After running all docker services using docker compose, set `DJANGO_READ_DOT_ENV_FILE` to true.
 Then you're able to run any django commands from your local machine.
 
 ### Accessing the backend server locally
-Once the containers have been started using docker-compose, you can go to localhost:8080/swagger/
+Once the containers have been started using docker compose, you can go to localhost:8080/swagger/
 to explore the available endpoints and to localhost:8080/admin/ to access Django's admin GUI.
 
 #### Run translations script
