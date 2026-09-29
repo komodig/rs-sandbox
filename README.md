@@ -10,7 +10,10 @@ the nginx server easy to deploy as docker images.
 ## Prerequisites
 * [Debian](https://debian.org)
 * [Docker](https://docs.docker.com/engine/install/debian/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
+* [Docker Compose v2](https://docs.docker.com/compose/install/) — the `docker compose`
+  plugin, *not* the legacy `docker-compose` v1 script. Compose v1 is end-of-life and
+  fails against current Docker Engines with `KeyError: 'id'`.
+  On Debian/Ubuntu: `sudo apt install docker-compose-v2 docker-buildx`
 
 ## Quick Start
 
@@ -18,7 +21,7 @@ the nginx server easy to deploy as docker images.
 2. After cloning this repository, navigate to the root folder and run the following command to start with backend:
     * make sure your SSH key is NOT protected with a password
     * copy the file `.env.example` to a file named `.env`, fill in any secrets needed
-    * build backend image with ssh key: `docker compose build --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)"`
+    * build backend image: `docker compose build`
    On first run, Docker builds the required images and installs the dependencies listed in [`pyproject.toml`](./pyproject.toml)
     and locked in [`poetry.lock`](./poetry.lock).
     * Run `docker network create global_network`
@@ -29,12 +32,13 @@ the nginx server easy to deploy as docker images.
     ```
 
 4. Run `$ docker compose up -d` to start the backend app (`$ docker compose down` stops it again)
-5. After the app has booted, connect to backend container:
+5. After the app has booted, some DB-related errors are expected (because of empty database) connect to backend container:
 
     ```
-    docker exec -it backend_backend_1 bash
+    docker exec -it backend-backend-1 bash
     ```
-   (you can exit the container by executing `exit` on the shell)
+   When that didn't work check container names by running: `docker ps` or `docker container ls`
+   If it's running and you're connected you can exit the container by executing `exit` on the shell
 
 6. In the container, run the following setup commands:
 
@@ -62,6 +66,9 @@ the nginx server easy to deploy as docker images.
 After running all docker services using docker compose, set `DJANGO_READ_DOT_ENV_FILE` to true.
 Then you're able to run any django commands from your local machine.
 
+NOTE: make sure the file-system where docker-service is running (i.e. docker-data location) is NOT ENCRYPTED!
+      the docker overlay2 driver would fail otherwise
+
 ### Accessing the backend server locally
 Once the containers have been started using docker compose, you can go to localhost:8080/swagger/
 to explore the available endpoints and to localhost:8080/admin/ to access Django's admin GUI.
@@ -83,7 +90,7 @@ for anonymous users we set a limit of 100 requests per hour and for authenticate
 ### Commit hooks
 ```bash
 pre-commit install
-pre-commit install -t commit 
+pre-commit install -t commit
 ```
 
 
@@ -94,4 +101,10 @@ If `poetry install` fails on psycopg2 try:
 ### install ASGI worker (if required)
 If app complains about missing module uvicorn
 `pip install uvicorn`
+
+### test
+
+once docker compose up is working you can reach the backend directly via `http://localhost:8080/rsapp/`
+
+-> Success!
 

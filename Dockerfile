@@ -1,8 +1,8 @@
 ### Base image for builder and final image
-FROM python:3.9 as base
+FROM python:3.12 as base
 
-RUN apt-get update && apt-get install -y \
-    gettext netcat \
+RUN apt update && apt install -y \
+    gettext netcat-traditional \
     && rm -rf /var/lib/apt/lists/*
 
 ARG RUN_DEV=0
@@ -22,23 +22,24 @@ ARG SSH_PRIVATE_KEY
 ENV PIP_DEFAULT_TIMEOUT=100 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
-    POETRY_VERSION=1.1.4
+    POETRY_VERSION=2.4.2
 
 
 # Install Python dependencies
-RUN pip install "poetry==$POETRY_VERSION"
+RUN pip install "poetry==$POETRY_VERSION" "poetry-plugin-export>=1.8"
 RUN python -m venv /venv
 
 COPY pyproject.toml poetry.lock ./
 
 RUN if [ "${RUN_DEV}" = "1" ]; then \
-        poetry export --no-interaction --without-hashes --dev -f requirements.txt | /venv/bin/pip install -r /dev/stdin; \
+        poetry export --no-interaction --without-hashes --with dev -f requirements.txt | /venv/bin/pip install -r /dev/stdin; \
     else \
         poetry export --no-interaction --without-hashes -f requirements.txt | /venv/bin/pip install -r /dev/stdin; \
     fi
 
 
 COPY . .
+
 RUN poetry build
 RUN /venv/bin/pip install dist/*.whl
 
